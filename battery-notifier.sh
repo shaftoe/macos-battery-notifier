@@ -2,12 +2,25 @@ set -euo pipefail
 
 readonly LAUNCHD_CONFIG_FILE="$HOME/Library/LaunchAgents/in.l3x.battery.plist"
 
+function unload() {
+    launchctl unload $LAUNCHD_CONFIG_FILE 2> /dev/null || true
+}
+
 if [ $1 == "--help" -o $1 == "-h" ]; then
     printf "Usage:
     $0 <min_cpu_usage> <max_cpu_usage>            # send alert if cpu usage is below min or above max
     $0 --install <min_cpu_usage> <max_cpu_usage>  # create Launchd config file (${LAUNCHD_CONFIG_FILE}) and reload daemon
+    $0 --uninstall                                # uninstall Launchd user-agent
     $0 --help                                     # print this help message
 "
+    exit 0
+fi
+
+if [ $1 == "--uninstall" ]; then
+    printf "uninstalling Launchd user-agent\n"
+    unload
+    printf "removing ${LAUNCHD_CONFIG_FILE}\n"
+    rm -f "$LAUNCHD_CONFIG_FILE"
     exit 0
 fi
 
@@ -35,7 +48,7 @@ if [ $1 == "--install" ]; then
 </plist>
 " > $LAUNCHD_CONFIG_FILE
     printf "Reloading Launchd... "
-    launchctl unload $LAUNCHD_CONFIG_FILE
+    unload
     launchctl load $LAUNCHD_CONFIG_FILE
     printf "done\n"
     exit 0

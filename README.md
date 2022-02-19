@@ -20,6 +20,7 @@ Personally I use 20-80 as a range but it's configurable and you can set your own
 
     ./battery-notifier.sh <min_cpu_usage> <max_cpu_usage>            # send alert if cpu usage is below min or above max
     ./battery-notifier.sh --install <min_cpu_usage> <max_cpu_usage>  # create Launchd config (.plist) file and reload daemon
+    ./battery-notifier.sh --uninstall                                # uninstall Launchd user-agent
     ./battery-notifier.sh --help                                     # print this help message
 
 ### Examples

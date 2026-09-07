@@ -1,3 +1,23 @@
+> [!WARNING]
+> archived in favour of the following [Hammerspoon](https://www.hammerspoon.org/ ) script:
+
+```lua
+-- Battery low notification: fires once when crossing 20% on battery,
+-- re-arms once the battery is charging again (or above 20%).
+local batteryWatcher = hs.battery.watcher.new(function()
+    local pct = hs.battery.percentage()
+    local charging = hs.battery.isCharging()
+    
+    if pct ~= nil and pct <= 20 and not charging and not batteryLowNotified then
+        batteryLowNotified = true
+        hs.notify.show("Battery low", "Hammerspoon", "Battery at " .. string.format("%.0f%%", pct) .. " — please plug in")
+    elseif charging or (pct ~= nil and pct > 20) then
+        batteryLowNotified = false
+    end
+end)
+batteryWatcher:start()
+```
+
 # macos-battery-notifier
 
 Show a notification in macOS Notification Center when the MacBook battery is low or full.
